@@ -1,0 +1,9 @@
+---
+version: 1.12.2
+
+volume: ''
+
+publish:
+# default minectaft server port is 25565
+  port: ''
+  interface: 0.0.0.0

@@ -1,0 +1,18 @@
+version: '3.1'
+services:
+  {{service_name}}:
+    image: {{docker_images.minecraft.name}}:{{docker_images.minecraft.tag}}
+    container_name: {{docker_container.name}}
+{% if docker_container.volumes.data != "" %}
+    volumes:
+     - {{docker_container.volumes.data}}:/data
+{% endif %}
+{% if docker_container.publish.port != "" %}
+    ports:
+     - {{docker_container.publish.interface}}:{{docker_container.publish.port}}:25565
+{% endif %}
+    networks:
+     - {{service_name}}_network
+
+networks:
+  {{service_name}}_network:

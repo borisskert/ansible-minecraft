@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ ! -f /data/eula.txt ]
+then
+    echo "eula=true" > /data/eula.txt
+fi
+
+cd /data/; java -Xmx2G -jar /minecraft_server.jar nogui
