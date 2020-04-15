@@ -1,0 +1,45 @@
+---
+- name: create docker working directory
+  file:
+    path: "{{docker.workingdir}}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: create dockerimage directory
+  file:
+    path: "{{docker_images.minecraft.path}}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: template dockerfile
+  template:
+    src: ./docker/Dockerfile.j2
+    dest: "{{docker_images.minecraft.path}}/Dockerfile"
+    owner: root
+    group: root
+    mode: 0644
+  register: dockerfile
+
+- name: copy docker entrypoint start script
+  copy:
+    src: ./docker/start
+    dest: "{{docker_images.minecraft.path}}/start"
+    owner: root
+    group: root
+    mode: 0755
+  register: dockerimage_files
+
+- name: build dockerimage
+  docker_image:
+    build:
+      path: "{{docker_images.minecraft.path}}"
+      pull: no
+    name: "{{docker_images.minecraft.name}}"
+    tag: "{{version_to_be_installed}}"
+    source: build
+    force: "{{ dockerfile.changed or docker.force_build or dockerimage_files.changed }}"
+  register: dockerimage

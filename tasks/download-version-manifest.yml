@@ -1,0 +1,28 @@
+---
+- name: create temporary directory
+  file:
+    path: /tmp/install-minecraft
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+  changed_when: false
+
+- name: Download version manifest
+  get_url:
+    url: https://launchermeta.mojang.com/mc/game/version_manifest.json
+    dest: /tmp/install-minecraft/version_manifest.json
+  changed_when: false
+
+- name: Read version manifest file
+  slurp:
+    src: /tmp/install-minecraft/version_manifest.json
+  register: version_manifest_file
+
+- name: Read version manifest content
+  set_fact:
+    version_manifest_content: "{{ version_manifest_file['content'] }}"
+
+- name: Parse json from version manifest content
+  set_fact:
+    version_manifest: "{{ version_manifest_content | b64decode | from_json }}"

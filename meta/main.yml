@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: flandiGT
+  author: borisskert
   description: Installation role for minecraft-server docker container
   min_ansible_version: 2.1
   platforms:

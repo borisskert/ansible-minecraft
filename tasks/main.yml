@@ -1,8 +1,7 @@
 ---
-- include: build_dockerimages.yml
-
-- include: create_volumes.yml
-- include: template_compose_file.yml
+- include: estimate-version-to-be-installed.yml
+- include: build-dockerimage.yml
+- include: create-volumes.yml
 
 - name: Create systemd unit file
   template:
@@ -22,4 +21,11 @@
     name: "{{service_name}}"
     state: restarted
     enabled: yes
-  when: dockerimage.changed or dockercompose_file.changed or systemd_unitfile.changed
+  when: >
+    dockerimage.changed
+    or systemd_unitfile.changed
+
+- name: Start service (if not started already)
+  service:
+    name: "{{service_name}}"
+    state: started

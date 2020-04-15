@@ -1,9 +1,13 @@
 ---
 version: 1.12.2
 
+java_version: 8u212
+
 volume: ''
 
 publish:
 # default minectaft server port is 25565
   port: ''
   interface: 0.0.0.0
+
+accept_eula: no

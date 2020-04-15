@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+
+if [ "$ACCEPT_EULA" = "true" ]
+then
+    echo "#Generated via install-minecraft ansible role on $(date)" > /data/eula.txt
+    echo "eula=true" >> /data/eula.txt
+else
+    echo "You have to accept the EULA. Exiting..."
+    exit 1
+fi
+
+cd /data
+ls -la
+cat eula.txt
+
+java -Xmx2G -jar /minecraft_server.jar nogui

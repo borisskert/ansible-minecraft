@@ -1,0 +1,8 @@
+---
+- name: Read latest release version
+  set_fact:
+    latest_version: "{{ version_manifest['latest']['release'] }}"
+
+- debug:
+    msg: "Latest available version: {{ latest_version }}"
+  when: latest_version is defined

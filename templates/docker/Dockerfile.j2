@@ -1,0 +1,25 @@
+FROM openjdk:{{java_version}}-jre-alpine
+
+LABEL maintainer "https://github.com/borisskert/ansible-minecraft"
+
+RUN apk add --no-cache -U \
+  bash \
+  curl
+
+RUN adduser -DHs /sbin/nologin -u {{minecraft_user_uid}} minecraft
+
+RUN mkdir -p /data && \
+    curl -o /minecraft_server.jar "{{download_info.url}}"; \
+    echo "{{download_info.sha1}} /minecraft_server.jar" | sha1sum --check -; \
+    chown -R minecraft:minecraft /data
+
+COPY ./start /start
+RUN	chmod +x /start
+
+USER minecraft
+
+EXPOSE 25565
+
+VOLUME ["/data"]
+
+ENTRYPOINT ["/start"]

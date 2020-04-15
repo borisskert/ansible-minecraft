@@ -1,28 +1,30 @@
 [Install]
-WantedBy = multi-user.target
+WantedBy=multi-user.target
 
 [Unit]
-Description = {{service_name}} service
-After       = docker.service
-Requires    = docker.service
+Description={{service_name}} service
+After=docker.service
+Requires=docker.service
 
 [Service]
-ExecStartPre = -{{docker.cli_executible}} build --tag {{docker_images.minecraft.name}}:{{docker_images.minecraft.tag}} {{docker_images.minecraft.path}}
-ExecStartPre = -{{docker.compose_executible}} --project-directory {{docker_compose.path}} \
-                               --file {{docker_compose.path}}/{{docker_compose.filename}} \
-                               --project-name {{service_name}} \
-                               down --remove-orphans
+ExecStartPre=/usr/bin/docker build --tag {{docker_images.minecraft.name}}:{{version_to_be_installed}} {{docker_images.minecraft.path}}
+ExecStartPre=-/usr/bin/docker rm -f {{docker_container.name}}
 
-ExecStart = {{docker.compose_executible}} --project-directory {{docker_compose.path}} \
-                           --file {{docker_compose.path}}/{{docker_compose.filename}} \
-                           --project-name {{service_name}} \
-                           up
+ExecStart=/usr/bin/docker run --name {{docker_container.name}} \
+{% if docker_container.volumes.data != "" %}
+            --volume {{docker_container.volumes.data}}:/data \
+{% endif %}
+{% if docker_container.publish.port != "" %}
+            --publish {{docker_container.publish.interface}}:{{docker_container.publish.port}}:25565 \
+{% endif %}
+{% if accept_eula | bool %}
+            --env ACCEPT_EULA=true \
+{% endif %}
+            {{docker_images.minecraft.name}}:{{version_to_be_installed}}
 
-ExecStop  = -{{docker.compose_executible}} --project-directory {{docker_compose.path}} \
-                                            --file {{docker_compose.path}}/{{docker_compose.filename}} \
-                                            --project-name {{service_name}} \
-                                            down --remove-orphans
+ExecStop=-/usr/bin/docker stop {{docker_container.name}}
+ExecStopPost=-/usr/bin/docker rm -f {{docker_container.name}}
 
-Restart = always
-RestartSec = 60s
-TimeoutSec=60
+Restart=always
+RestartSec=60s
+TimeoutSec=3600

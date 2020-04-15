@@ -6,7 +6,6 @@ This role is only tested on ubuntu 16.04.
 ## System requirements
 
 * Docker
-* docker-compose
 * Systemd
 
 ## Role requirements
@@ -17,7 +16,6 @@ This role is only tested on ubuntu 16.04.
 
 * Build docker image locally
 * Create volume paths for docker container
-* Create docker-compose file
 * Setup systemd unit file
 * Start/Restart service
 
@@ -25,18 +23,19 @@ This role is only tested on ubuntu 16.04.
 
 | Variable      | Type | Mandatory? | Default | Description           |
 |---------------|------|------------|---------|-----------------------|
-| version       | text | no         | 1.12.2  | Minecraft version     |
-| volume        | text | no         | <empty> | Local path to minecraft server data volume |
-| publish.port   | text | no        | <empty> | Port to be published (default minecraft server port is 25565) |
-| publish.interface | text | no     | 0.0.0.0 | Interface to be published          |
+| version       | text | no         | latest version | Minecraft version     |
+| volume        | text | no         | <empty>        | Local path to minecraft server data volume |
+| publish.port   | text | no        | <empty>        | Port to be published (default minecraft server port is 25565) |
+| publish.interface | text | no     | 0.0.0.0        | Interface to be published                                     |
+| accept_eula       | boolean | no  | no             | You need to agree to the EULA in order to run the server.     |
 
 ## Usage
 
 ### requirements.yml
 
-```
+```yaml
 - name: install-minecraft
-  src: https://github.com/flandiGT/ansible-docker-minecraft.git
+  src: https://github.com/borisskert/ansible-minecraft.git
   scm: git
 ```
 
@@ -44,17 +43,21 @@ This role is only tested on ubuntu 16.04.
 
 Usage (without parameters):
 
+```yaml
     - hosts: servers
-      roles:
-         - { role: install-minecraft }
+    - role: ansible-minecraft
+      accept_eula: yes
+```
 
 Usage (with parameters):
 
+```yaml
     - hosts: servers
-      roles:
-      - role: install-minecraft
-        version: 1.12.2
-        volume: /srv/minecraft/data
-        publish:
-          port: 25565
-          interface: 0.0.0.0
+    - role: ansible-minecraft
+      version: 1.12.2
+      volume: /srv/docker/minecraft/data
+      accept_eula: yes
+      publish:
+        port: 25565
+        interface: 0.0.0.0
+```

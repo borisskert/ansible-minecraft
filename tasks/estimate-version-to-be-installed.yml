@@ -1,0 +1,48 @@
+---
+- name: Use fixed version
+  set_fact:
+    version_to_be_installed: "{{ version }}"
+  when: version is defined
+
+- include: download-version-manifest.yml
+- include: estimate-latest-version.yml
+  when: version is not defined
+
+- name: Use latest version
+  set_fact:
+    version_to_be_installed: "{{ latest_version }}"
+  when: version is not defined
+
+- debug:
+    msg: "Version to be installed: {{version_to_be_installed}}"
+
+- name: Select download url
+  set_fact:
+    package_info_url: "{{ (
+      version_manifest['versions']
+      | selectattr('id', 'equalto', version_to_be_installed)
+      | first
+      )['url'] }}"
+
+- name: Download package info
+  get_url:
+    url: "{{package_info_url}}"
+    dest: /tmp/install-minecraft/package_info_url.json
+  changed_when: false
+
+- name: Read package info file
+  slurp:
+    src: /tmp/install-minecraft/package_info_url.json
+  register: package_info_file
+
+- name: Read package info content
+  set_fact:
+    package_info_content: "{{ package_info_file['content'] }}"
+
+- name: Parse json from package info content
+  set_fact:
+    package_info: "{{ package_info_content | b64decode | from_json }}"
+
+- name: Read from download info
+  set_fact:
+    download_info: "{{ package_info['downloads']['server'] }}"
