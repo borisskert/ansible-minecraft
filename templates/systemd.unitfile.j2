@@ -7,7 +7,7 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-ExecStartPre=/usr/bin/docker build --tag {{docker_images.minecraft.name}}:{{version_to_be_installed}} {{docker_images.minecraft.path}}
+ExecStartPre=/usr/bin/docker build --tag {{docker_image.name}}:{{version_to_be_installed}} {{docker_image.path}}
 ExecStartPre=-/usr/bin/docker rm -f {{docker_container.name}}
 
 ExecStart=/usr/bin/docker run --name {{docker_container.name}} \
@@ -20,7 +20,7 @@ ExecStart=/usr/bin/docker run --name {{docker_container.name}} \
 {% if accept_eula | bool %}
             --env ACCEPT_EULA=true \
 {% endif %}
-            {{docker_images.minecraft.name}}:{{version_to_be_installed}}
+            {{docker_image.name}}:{{version_to_be_installed}}
 
 ExecStop=-/usr/bin/docker stop {{docker_container.name}}
 ExecStopPost=-/usr/bin/docker rm -f {{docker_container.name}}

@@ -1,14 +1,13 @@
 ---
 service_name: minecraft
 
-docker:
-  workingdir: "/opt/{{service_name}}/docker"
-  force_build: no
+working_directory: "/opt/{{service_name}}"
 
-docker_images:
-  minecraft:
-    name: "local/{{service_name}}"
-    path: "{{docker.workingdir}}/image"
+force_build: no
+
+docker_image:
+  name: "local/{{service_name}}"
+  path: "{{working_directory}}/docker"
 
 docker_container:
   name: "{{service_name}}.service"

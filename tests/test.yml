@@ -12,6 +12,7 @@
       version: 1.12.2
       volume: /srv/docker/minecraft/data
       accept_eula: yes
+      force_build: no
       publish:
         port: 25565
         interface: 0.0.0.0
