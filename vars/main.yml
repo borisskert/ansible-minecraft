@@ -3,8 +3,6 @@ service_name: minecraft
 
 working_directory: "/opt/{{service_name}}"
 
-force_build: no
-
 docker_image:
   name: "local/{{service_name}}"
   path: "{{working_directory}}/docker"

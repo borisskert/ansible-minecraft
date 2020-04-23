@@ -1,7 +1,7 @@
 ---
-version: ''
-
-java_version: 8u212
+minecraft_version: 'latest'
+alpine_version: 'latest'
+openjdk_version: 'latest'
 
 volume: ''
 
@@ -11,3 +11,5 @@ publish:
   interface: 0.0.0.0
 
 accept_eula: no
+
+force_build: no

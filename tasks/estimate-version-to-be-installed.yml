@@ -1,17 +1,16 @@
 ---
 - name: Use fixed version
   set_fact:
-    version_to_be_installed: "{{ version }}"
-  when: version != ''
+    version_to_be_installed: "{{ minecraft_version }}"
+  when: minecraft_version is defined
+    and minecraft_version | length > 0
+    and minecraft_version != 'latest'
 
 - include: download-version-manifest.yml
 - include: estimate-latest-version.yml
-  when: version is not defined or version == ''
-
-- name: Use latest version
-  set_fact:
-    version_to_be_installed: "{{ latest_version }}"
-  when: version is not defined or version == ''
+  when: minecraft_version is not defined
+    or minecraft_version | length < 1
+    or minecraft_version == 'latest'
 
 - debug:
     msg: "Version to be installed: {{version_to_be_installed}}"

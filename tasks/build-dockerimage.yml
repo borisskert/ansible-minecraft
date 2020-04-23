@@ -1,5 +1,5 @@
 ---
-- name: create docker working directory
+- name: Create docker working directory
   file:
     path: "{{working_directory}}"
     state: directory
@@ -7,7 +7,7 @@
     group: root
     mode: 0755
 
-- name: create dockerimage directory
+- name: Create dockerimage directory
   file:
     path: "{{docker_image.path}}"
     state: directory
@@ -15,7 +15,7 @@
     group: root
     mode: 0755
 
-- name: template dockerfile
+- name: Template dockerfile
   template:
     src: ./docker/Dockerfile.j2
     dest: "{{docker_image.path}}/Dockerfile"
@@ -24,7 +24,7 @@
     mode: 0644
   register: dockerfile
 
-- name: copy docker entrypoint start script
+- name: Copy docker entrypoint start script
   copy:
     src: ./docker/start
     dest: "{{docker_image.path}}/start"
@@ -33,7 +33,7 @@
     mode: 0755
   register: dockerimage_files
 
-- name: build dockerimage
+- name: Build dockerimage
   docker_image:
     build:
       path: "{{docker_image.path}}"

@@ -1,10 +1,19 @@
-FROM openjdk:{{java_version}}-jre-alpine
+{% if alpine_version is not defined or alpine_version == 'latest' %}
+FROM alpine
+{% else %}
+FROM alpine:{{alpine_version}}
+{% endif %}
 
 LABEL maintainer "https://github.com/borisskert/ansible-minecraft"
 
 RUN apk add --no-cache -U \
   bash \
-  curl
+  curl \
+{% if openjdk_version is not defined or openjdk_version == 'latest' %}
+  openjdk8-jre
+{% else %}
+  openjdk8-jre={{openjdk_version}}
+{% endif %}
 
 RUN adduser -DHs /sbin/nologin -u {{minecraft_user_uid}} minecraft
 

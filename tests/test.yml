@@ -9,8 +9,10 @@
       install_pip_docker: yes
 
     - role: ansible-minecraft
-      version: 1.12.2
-      volume: /srv/docker/minecraft/data
+      minecraft_version: 1.12.2
+      alpine_version: 3.11.5
+      openjdk_version: 8.242.08-r0
+      volume: /srv/minecraft/data
       accept_eula: yes
       force_build: no
       publish:

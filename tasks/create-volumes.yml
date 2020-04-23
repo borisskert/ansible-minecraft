@@ -1,5 +1,5 @@
 ---
-- name: create volume directories
+- name: Create volume directories
   file:
     path: "{{item.value}}"
     state: directory

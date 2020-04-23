@@ -1,16 +1,22 @@
 # ansible-docker-minecraft
 
 Installs a minecraft server as docker container.
-This role is only tested on ubuntu 16.04.
 
 ## System requirements
 
+* Python 3
 * Docker
 * Systemd
 
 ## Role requirements
 
 * python-docker package
+
+## Tested operating systems
+
+* Ubuntu
+  * 16.04 (xenial)
+  * 18.04 (bionic)
 
 ## Tasks
 
@@ -23,11 +29,13 @@ This role is only tested on ubuntu 16.04.
 
 | Variable      | Type | Mandatory? | Default | Description           |
 |---------------|------|------------|---------|-----------------------|
-| version       | text | no         | latest version | Minecraft version     |
-| volume        | text | no         | <empty>        | Local path to minecraft server data volume |
-| publish.port   | text | no        | <empty>        | Port to be published (default minecraft server port is 25565) |
-| publish.interface | text | no     | 0.0.0.0        | Interface to be published                                     |
-| accept_eula       | boolean | no  | no             | You need to agree to the EULA in order to run the server.     |
+| minecraft_version | text | no         | latest | Used Minecraft version  |
+| openjdk_version   | text | no         | latest | Used OpenJDK version. See [openjdk8-jre package for alpine](https://pkgs.alpinelinux.org/packages?name=openjdk8-jre&branch=edge) |
+| alpine_version    | text | no         | latest | Used version of the `alpine` Docker base image   |
+| volume         | text | yes       | <empty>          | Local path to minecraft server data volume |
+| publish.port   | text | no        | <empty>          | Port to be published (default minecraft server port is 25565) |
+| publish.interface | text | no     | 0.0.0.0          | Interface to be published                                     |
+| accept_eula       | boolean | no  | no               | You need to agree to the EULA in order to run the server.     |
 
 ## Usage
 
@@ -41,22 +49,26 @@ This role is only tested on ubuntu 16.04.
 
 ### Example Playbook
 
-Usage (without parameters):
+Minimal:
 
 ```yaml
     - hosts: servers
     - role: ansible-minecraft
+      volume: /srv/minecraft/data
       accept_eula: yes
 ```
 
-Usage (with parameters):
+All parameters:
 
 ```yaml
     - hosts: servers
-    - role: ansible-minecraft
-      version: 1.12.2
-      volume: /srv/docker/minecraft/data
+    - role: install-minecraft
+      minecraft_version: 1.12.2
+      alpine_version: 3.11.5
+      openjdk_version: 8.242.08-r0
+      volume: /srv/minecraft/data
       accept_eula: yes
+      force_build: no
       publish:
         port: 25565
         interface: 0.0.0.0

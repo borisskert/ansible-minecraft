@@ -6,3 +6,7 @@
 - debug:
     msg: "Latest available version: {{ latest_version }}"
   when: latest_version is defined
+
+- name: Use latest version
+  set_fact:
+    version_to_be_installed: "{{ latest_version }}"
